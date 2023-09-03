@@ -27,7 +27,7 @@ public class PriceControllerIntegrationTest {
     private TestRestTemplate restTemplate;
 
     @Test
-    public void testFindPrice_Success() {
+    public void testQueryPrice_Success() {
         LocalDateTime date = LocalDateTime.of(2020, 6, 14, 10, 0);
         Long productId = 35455L;
         Long brandId = 1L;
@@ -44,7 +44,7 @@ public class PriceControllerIntegrationTest {
     }
 
     @Test
-    public void testFindPrice_PriceNotFound() {
+    public void testQueryPrice_PriceNotFound() {
         LocalDateTime date = LocalDateTime.of(2020, 6, 14, 10, 0);
         Long productId = 12345L; // Non existing Product
         Long brandId = 1L;
@@ -59,7 +59,7 @@ public class PriceControllerIntegrationTest {
     }
 
     @Test
-    public void testRequestAt10AMOnDay14() {
+    public void testQueryPriceFor10AMOnDay14_ReturnsCorrectPrice() {
         LocalDateTime date = LocalDateTime.of(2020, 6, 14, 10, 0);
         Long productId = 35455L;
         Long brandId = 1L;
@@ -70,13 +70,13 @@ public class PriceControllerIntegrationTest {
 
         assertEquals(200, responseEntity.getStatusCode().value());
         assertNotNull(responseEntity.getBody());
-        assertEquals(1L, responseEntity.getBody().getId());
+        assertEquals(1L, responseEntity.getBody().getPriceList());
         assertEquals(35.50, responseEntity.getBody().getPrice());
        
     }
 
     @Test
-    public void testRequestAt4PMOnDay14() {
+    public void testQueryPriceFor4PMOnDay14_ReturnsCorrectPrice() {
         LocalDateTime date = LocalDateTime.of(2020, 6, 14, 16, 0);
         Long productId = 35455L;
         Long brandId = 1L;
@@ -87,13 +87,13 @@ public class PriceControllerIntegrationTest {
 
         assertEquals(200, responseEntity.getStatusCode().value());
         assertNotNull(responseEntity.getBody());
-        assertEquals(2L, responseEntity.getBody().getId());
+        assertEquals(2L, responseEntity.getBody().getPriceList());
         assertEquals(25.45, responseEntity.getBody().getPrice());
        
     }
 
     @Test
-    public void testRequestAt9PMOnDay14() {
+    public void testQueryPriceFor9PMOnDay14_ReturnsCorrectPrice() {
         LocalDateTime date = LocalDateTime.of(2020, 6, 14, 21, 0);
         Long productId = 35455L;
         Long brandId = 1L;
@@ -104,13 +104,13 @@ public class PriceControllerIntegrationTest {
 
         assertEquals(200, responseEntity.getStatusCode().value());
         assertNotNull(responseEntity.getBody());
-        assertEquals(1L, responseEntity.getBody().getId());
+        assertEquals(1L, responseEntity.getBody().getPriceList());
         assertEquals(35.50, responseEntity.getBody().getPrice());
        
     }
 
     @Test
-    public void testRequestAt10AMOnDay15() {
+    public void testQueryPriceFor10AMOnDay15_ReturnsCorrectPrice() {
         LocalDateTime date = LocalDateTime.of(2020, 6, 15, 10, 0);
         Long productId = 35455L;
         Long brandId = 1L;
@@ -121,13 +121,13 @@ public class PriceControllerIntegrationTest {
 
         assertEquals(200, responseEntity.getStatusCode().value());
         assertNotNull(responseEntity.getBody());
-        assertEquals(3L, responseEntity.getBody().getId());
+        assertEquals(3L, responseEntity.getBody().getPriceList());
         assertEquals(30.50, responseEntity.getBody().getPrice());
        
     }
 
     @Test
-    public void testRequestAt9PMOnDay16() {
+    public void testQueryPriceFor9PMOnDay16_ReturnsCorrectPrice() {
         LocalDateTime date = LocalDateTime.of(2020, 6, 16, 21, 0);
         Long productId = 35455L;
         Long brandId = 1L;
@@ -138,7 +138,25 @@ public class PriceControllerIntegrationTest {
 
         assertEquals(200, responseEntity.getStatusCode().value());
         assertNotNull(responseEntity.getBody());
-        assertEquals(4L, responseEntity.getBody().getId());
+        assertEquals(4L, responseEntity.getBody().getPriceList());
+        assertEquals(38.95, responseEntity.getBody().getPrice());
+       
+    }
+    
+    @Test
+    public void testQueryPriceForMultiplePriorities_ReturnsCorrectPrice() {
+        LocalDateTime date = LocalDateTime.of(2023, 6, 16, 21, 0);
+        Long productId = 35455L;
+        Long brandId = 1L;
+
+        ResponseEntity<PriceDTO> responseEntity = restTemplate.getForEntity(
+            "/prices/query?date={date}&productId={productId}&brandId={brandId}",
+            PriceDTO.class, date, productId, brandId);
+
+        assertEquals(200, responseEntity.getStatusCode().value());
+        assertNotNull(responseEntity.getBody());
+        assertEquals(3, responseEntity.getBody().getPriority());
+        assertEquals(4L, responseEntity.getBody().getPriceList());
         assertEquals(38.95, responseEntity.getBody().getPrice());
        
     }
