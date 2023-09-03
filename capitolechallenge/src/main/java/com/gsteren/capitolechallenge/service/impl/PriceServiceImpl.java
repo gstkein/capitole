@@ -28,7 +28,7 @@ public class PriceServiceImpl implements PriceService {
             brandId, productId, startDate, endDate);
         
         PriceDTO priceDTO = oprice.map(price -> objectMapper.convertValue(price, PriceDTO.class))
-                .orElseThrow(() -> new NoSuchElementException("No se encontró un precio válido"));
+                .orElseThrow(() -> new NoSuchElementException("No valid price found")); //TODO use messages and internationalization (out of scope)
 
         
         return priceDTO;
