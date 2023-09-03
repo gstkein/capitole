@@ -2,9 +2,9 @@ package com.gsteren.capitolechallenge.dto;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import lombok.Data;
 
+@Data
 public class PriceDTO {
 	private Long id;
 	private Long brandId;
