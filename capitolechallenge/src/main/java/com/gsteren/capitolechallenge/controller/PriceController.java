@@ -15,10 +15,16 @@ import com.gsteren.capitolechallenge.service.PriceService;
 @RestController
 @RequestMapping("/prices")
 public class PriceController {
-	 @Autowired
-	    private PriceService priceService;
+	 
+	private final PriceService priceService;
 
-    @GetMapping("/query")
+	
+    public PriceController(PriceService priceService) {
+		super();
+		this.priceService = priceService;
+	}
+
+	@GetMapping("/query")
     public ResponseEntity<PriceDTO> findPrice(@RequestParam LocalDateTime date, @RequestParam Long productId, @RequestParam Long brandId) {
         PriceDTO price = priceService.findPriceWithMaxPriorityWhithinDateRange(
             brandId, productId, date, date);

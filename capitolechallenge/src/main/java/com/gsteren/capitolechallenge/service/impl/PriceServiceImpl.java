@@ -16,13 +16,18 @@ import com.gsteren.capitolechallenge.service.PriceService;
 @Service
 public class PriceServiceImpl implements PriceService {
 	
-	 @Autowired
-	 private PriceRepository priceRepository;
+	 private final PriceRepository priceRepository;
 	 
-	 @Autowired
-	 private ObjectMapper objectMapper;
+	 private final ObjectMapper objectMapper;
 	 
- 	@Override
+	 
+ 	public PriceServiceImpl(PriceRepository priceRepository, ObjectMapper objectMapper) {
+		super();
+		this.priceRepository = priceRepository;
+		this.objectMapper = objectMapper;
+	}
+
+	@Override
     public PriceDTO findPriceWithMaxPriorityWhithinDateRange(Long brandId, Long productId, LocalDateTime startDate, LocalDateTime endDate) {
         Optional<Price> oprice = priceRepository.findPriceWithMaxPriorityWhithinDateRange(
             brandId, productId, startDate, endDate);
